@@ -1,0 +1,34 @@
+# Default values for go-hello-http.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Number of replicas for the Deployment
+replicaCount: 1
+
+# Docker image configuration
+image:
+  repository: ironcore864/go-hello-http
+  pullPolicy: IfNotPresent
+  # The tag of the Docker image
+  tag: "0.0.16"
+
+# Service configuration
+service:
+  type: ClusterIP # Use ClusterIP to restrict external access
+  port: 80 # The port that this service should expose
+
+# Ingress configuration (disabled by default)
+ingress:
+  enabled: false
+
+# Resource limits and requests for the container
+resources: {}
+
+# Node selector for pod scheduling
+nodeSelector: {}
+
+# Tolerations for pod scheduling
+tolerations: []
+
+# Affinity rules for pod scheduling
+affinity: {}

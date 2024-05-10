@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "go-hello-http.fullname" . }}
+  labels:
+    {{- include "go-hello-http.labels" . | nindent 4 }}
+spec:
+  # Number of replicas specified in values.yaml
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "go-hello-http.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "go-hello-http.selectorLabels" . | nindent 8 }}
+    spec:
+      # Security context for the pod
+      securityContext:
+        runAsUser: 1000   # The user ID to run the container
+        runAsGroup: 3000  # The group ID to run the container
+        fsGroup: 2000     # The group ID for all files created by the container
+      containers:
+        - name: {{ .Chart.Name }}
+          # Docker image specified in values.yaml
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 8080 # Port exposed by the container
+          resources:
+            # Resource requests and limits
+            {{- toYaml .Values.resources | nindent 12 }}
+      # Node selector for scheduling
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      # Tolerations for scheduling
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      # Affinity rules for scheduling
+      affinity:
+        {{- toYaml .Values.affinity | nindent 8 }}
